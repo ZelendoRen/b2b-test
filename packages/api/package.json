@@ -1,0 +1,44 @@
+{
+	"name": "api",
+	"version": "1.0.0",
+	"keywords": [],
+	"type": "commonjs",
+	"author": "Zelendoren <p.adamenko@gmail.com>",
+	"license": "MIT",
+	"main": "index.js",
+	"directories": {
+		"lib": "lib",
+		"test": "__tests__"
+	},
+	"files": [
+		"lib"
+	],
+	"publishConfig": {
+		"registry": "https://registry.yarnpkg.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ZelendoRen/b2b-test.git"
+	},
+	"scripts": {
+		"start": "node index.js",
+		"start:dev": "node index.js"
+	},
+	"bugs": {
+		"url": "https://github.com/ZelendoRen/b2b-test/issues"
+	},
+	"homepage": "https://github.com/ZelendoRen/b2b-test#readme",
+	"dependencies": {
+		"blockchain": "file:../blockchain",
+		"bottleneck": "^2.19.5",
+		"koa": "^2.14.2",
+		"koa-bodyparser": "^4.4.1",
+		"koa-router": "^12.0.1",
+		"koa2-swagger-ui": "^5.0.0",
+		"swagger-jsdoc": "^6.2.8",
+		"viem": "^2.25.0"
+	},
+	"devDependencies": {
+		"nodemon": "^3.0.3"
+	}
+}

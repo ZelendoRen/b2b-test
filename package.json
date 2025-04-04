@@ -1,0 +1,25 @@
+{
+	"name": "b2b-test",
+	"version": "1.0.0",
+	"private": true,
+	"repository": "git@github.com:ZelendoRen/b2b-test.git",
+	"author": "Zelendoren <p.adamenko@gmail.com>",
+	"license": "MIT",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"api:start": "lerna run start --scope=api",
+		"api:start:dev": "lerna run start:dev --scope=api",
+		"api-nest:start": "lerna run start --scope=api-nest",
+		"api-nest:start:dev": "lerna run start:dev --scope=api-nest",
+		"blockchain:compile": "lerna run compile --scope=blockchain",
+		"blockchain:test": "lerna run test --scope=blockchain",
+		"blockchain:start": "lerna run start --scope=blockchain",
+		"blockchain:setup": "lerna run setup --scope=blockchain",
+		"blockchain:coverage": "lerna run coverage --scope=blockchain"
+	},
+	"dependencies": {
+		"lerna": "^8.2.1"
+	}
+}
