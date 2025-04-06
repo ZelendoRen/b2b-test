@@ -17,7 +17,9 @@
 		"blockchain:test": "lerna run test --scope=blockchain",
 		"blockchain:start": "lerna run start --scope=blockchain",
 		"blockchain:setup": "lerna run setup --scope=blockchain",
-		"blockchain:coverage": "lerna run coverage --scope=blockchain"
+		"blockchain:coverage": "lerna run coverage --scope=blockchain",
+		"ui:start:dev": "yarn workspace ui dev",
+		"setup": "concurrently \"yarn blockchain:setup\" \"yarn api:start:dev\" \"yarn ui:start:dev\""
 	},
 	"dependencies": {
 		"lerna": "^8.2.1"

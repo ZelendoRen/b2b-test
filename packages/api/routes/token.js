@@ -1,4 +1,4 @@
-const Router = require("koa-router");
+const Router = require("@koa/router");
 const TokenController = require("../controllers/token");
 
 const router = new Router();
@@ -102,5 +102,60 @@ router.get("/", async (ctx) => tokenController.getTokenInfo(ctx));
  *         description: Server error
  */
 router.post("/transfer", async (ctx) => tokenController.transfer(ctx));
+
+/**
+ * @swagger
+ * /token/transfer-from:
+ *   post:
+ *     summary: Transfer tokens with signature
+ *     description: Transfer tokens using a signed message for authorization
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - from
+ *               - to
+ *               - amount
+ *               - signature
+ *             properties:
+ *               from:
+ *                 type: string
+ *                 description: Source address
+ *               to:
+ *                 type: string
+ *                 description: Destination address
+ *               amount:
+ *                 type: string
+ *                 description: Amount to transfer in Wei
+ *               signature:
+ *                 type: string
+ *                 description: Signed message for authorization
+ *     responses:
+ *       200:
+ *         description: Transfer successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 code:
+ *                   type: integer
+ *                   example: 200
+ *                 response:
+ *                   type: object
+ *                   properties:
+ *                     txHash:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *       400:
+ *         description: Bad request (e.g., invalid signature)
+ *       500:
+ *         description: Server error
+ */
+router.post("/transfer-from", async (ctx) => tokenController.transferFrom(ctx));
 
 module.exports = router;

@@ -1,19 +1,37 @@
 import { Injectable } from "@nestjs/common";
-import { Address, createPublicClient, createWalletClient, http } from "viem";
+import {
+	Address,
+	createPublicClient,
+	createWalletClient,
+	getContract,
+	http,
+	WalletClient,
+	PublicClient,
+	formatGwei,
+} from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import config from "../config/config";
 
+type TokenInfo = {
+	name: string;
+	symbol: string;
+	decimals: number;
+};
 @Injectable()
 export class BlockchainService {
-	private publicClient;
-	private walletClient;
-	private contractAddress;
-	private contractAbi;
-
+	private publicClient: PublicClient;
+	private walletClient: WalletClient;
+	private contract;
+	private tokenInfo: TokenInfo;
 	constructor() {
 		this.publicClient = createPublicClient({
 			chain: config.blockchain.chain,
 			transport: http(),
+		});
+		this.contract = getContract({
+			address: config.blockchain.contractAddress,
+			abi: config.blockchain.abi.erc20,
+			client: this.publicClient,
 		});
 
 		const account = privateKeyToAccount(config.blockchain.operator as Address);
@@ -22,71 +40,64 @@ export class BlockchainService {
 			chain: config.blockchain.chain,
 			transport: http(),
 		});
-
-		this.contractAddress = config.blockchain.contractAddress;
-		this.contractAbi = config.blockchain.abi;
 	}
 
 	async getTokenInfo() {
-		const [name, symbol, decimals, totalSupply] = await Promise.all([
-			this.publicClient.readContract({
-				address: this.contractAddress,
-				abi: this.contractAbi,
-				functionName: "name",
-			}),
-			this.publicClient.readContract({
-				address: this.contractAddress,
-				abi: this.contractAbi,
-				functionName: "symbol",
-			}),
-			this.publicClient.readContract({
-				address: this.contractAddress,
-				abi: this.contractAbi,
-				functionName: "decimals",
-			}),
-			this.publicClient.readContract({
-				address: this.contractAddress,
-				abi: this.contractAbi,
-				functionName: "totalSupply",
-			}),
-		]);
+		try {
+			if (
+				!this.tokenInfo.name ||
+				!this.tokenInfo.symbol ||
+				!this.tokenInfo.decimals
+			) {
+				const [name, symbol, decimals] = await Promise.all([
+					this.contract.read.name(),
+					this.contract.read.symbol(),
+					this.contract.read.decimals(),
+				]);
+			}
+			let totalSupply;
+			try {
+				totalSupply = await this.contract.read.totalSupply();
+			} catch (error) {
+				totalSupply = BigInt(0);
+			}
 
-		return {
-			name,
-			symbol,
-			decimals,
-			totalSupply: totalSupply.toString(),
-		};
+			return {
+				name: this.tokenInfo.name,
+				symbol: this.tokenInfo.symbol,
+				decimals: this.tokenInfo.decimals,
+				totalSupply: (totalSupply / 10 ** this.tokenInfo.decimals).toString(),
+			};
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	async getTokenBalance(address: Address) {
-		return this.publicClient.readContract({
-			address: this.contractAddress,
-			abi: this.contractAbi,
-			functionName: "balanceOf",
-			args: [address],
-		});
+		try {
+			const balance = await this.contract.read.balanceOf([address]);
+			return (balance / 10 ** this.tokenInfo.decimals).toString();
+		} catch (error) {
+			throw new Error("Failed to get token balance");
+		}
 	}
 
 	async transfer(to: string, amount: number) {
-		const allowance = await this.publicClient.readContract({
-			address: this.contractAddress,
-			abi: this.contractAbi,
-			functionName: "allowance",
-			args: [this.walletClient.account.address, to],
-		});
+		try {
+			const allowance = await this.contract.read.allowance([
+				this.walletClient?.account?.address,
+				to,
+			]);
 
-		if (BigInt(allowance) < BigInt(amount)) {
-			throw new Error("Insufficient allowance");
+			if (BigInt(allowance) < BigInt(amount)) {
+				throw new Error("Insufficient allowance");
+			}
+
+			const hash = await this.contract.write.transfer([to, BigInt(amount)]);
+
+			return { hash };
+		} catch (error) {
+			throw new Error("Failed to transfer tokens");
 		}
-
-		const hash = await this.walletClient.writeContract({
-			address: this.contractAddress,
-			abi: this.contractAbi,
-			functionName: "transfer",
-			args: [to, BigInt(amount)],
-		});
-
-		return { hash };
 	}
 }

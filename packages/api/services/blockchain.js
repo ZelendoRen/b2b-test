@@ -9,7 +9,6 @@ const config = require("../config");
 
 class BlockchainController {
 	constructor() {
-		console.log(config.blockchain.chain);
 		this.publicClient = createPublicClient({
 			chain: config.blockchain.chain,
 			transport: http(),
@@ -36,12 +35,11 @@ class BlockchainController {
 
 	async getTokenInfo() {
 		if (!this.tokenInfo) {
-			const [name, symbol, decimals] = await Promise.all([
+			const [name, symbol, decimals, totalSupply] = await Promise.all([
 				this.contract.read.name(),
 				this.contract.read.symbol(),
 				this.contract.read.decimals(),
 			]);
-
 			this.tokenInfo = {
 				name,
 				symbol,
@@ -49,6 +47,7 @@ class BlockchainController {
 				address: config.blockchain.contractAddress,
 			};
 		}
+		this.tokenInfo.totalSupply = await this.contract.read.totalSupply();
 
 		return this.tokenInfo;
 	}

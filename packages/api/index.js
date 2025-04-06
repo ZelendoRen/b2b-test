@@ -1,11 +1,11 @@
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
-const Router = require("koa-router");
 const swaggerJsdoc = require("swagger-jsdoc");
 const koaSwagger = require("koa2-swagger-ui").koaSwagger;
 const Bottleneck = require("bottleneck");
 const tokenRouter = require("./routes/token");
 const config = require("./config");
+const cors = require("@koa/cors");
 
 const app = new Koa();
 
@@ -35,7 +35,14 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 app.use(bodyParser());
-
+app.use(
+	cors({
+		origin: "*",
+		allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowHeaders: ["Content-Type", "Authorization"],
+		exposeHeaders: ["Content-Range", "X-Content-Range"],
+	})
+);
 app.use(
 	koaSwagger({
 		routePrefix: "/swagger",

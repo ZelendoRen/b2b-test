@@ -15,8 +15,7 @@ export class TransferDto {
 }
 
 export class TokenInfoDto {
-	@ApiProperty({ description: "Token name" })
-	@IsString()
+	@ApiProperty({ description: "Token address", required: false })
 	@IsOptional()
 	address: Address;
 }

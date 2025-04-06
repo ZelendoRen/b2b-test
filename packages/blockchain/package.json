@@ -1,24 +1,7 @@
 {
 	"name": "blockchain",
-	"version": "0.0.0",
-	"keywords": [],
-	"author": "Zelendoren <p.adamenko@gmail.com>",
-	"license": "MIT",
-	"main": "lib/blockchain.js",
-	"directories": {
-		"lib": "lib",
-		"test": "__tests__"
-	},
-	"files": [
-		"lib"
-	],
-	"publishConfig": {
-		"registry": "https://registry.yarnpkg.com"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/ZelendoRen/b2b-test.git"
-	},
+	"version": "1.0.0",
+	"private": true,
 	"scripts": {
 		"start": "hardhat node --network hardhat",
 		"start:dev": "hardhat node --network hardhat",
@@ -29,10 +12,6 @@
 		"approve": "hardhat run scripts/erc20.allowance.add.ts --network localhost",
 		"setup": "concurrently \"hardhat node --network hardhat\" \"yarn coverage\" \"yarn mint\" \"yarn approve\""
 	},
-	"bugs": {
-		"url": "https://github.com/ZelendoRen/b2b-test/issues"
-	},
-	"homepage": "https://github.com/ZelendoRen/b2b-test#readme",
 	"dependencies": {
 		"@openzeppelin/contracts": "^5.2.0",
 		"hardhat": "^2.22.19",

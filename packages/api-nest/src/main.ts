@@ -6,11 +6,22 @@ import Bottleneck from "bottleneck";
 import { Request, Response, NextFunction } from "express";
 import config from "./config/config";
 import { Logger } from "@nestjs/common";
+
 async function bootstrap() {
 	const logger = new Logger("API");
 	const app = await NestFactory.create(AppModule);
 
-	app.enableCors();
+	// Configure CORS
+	app.enableCors({
+		origin:
+			process.env.NODE_ENV === "production"
+				? ["https://your-production-domain.com"] // Replace with your production domain
+				: ["http://localhost:3001"], // Vite dev server port
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+		credentials: true,
+	});
+
 	app.useGlobalPipes(new ValidationPipe());
 	const limiter = new Bottleneck({
 		maxConcurrent: config.api.maxConcurrent,

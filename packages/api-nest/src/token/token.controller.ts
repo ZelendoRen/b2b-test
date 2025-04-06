@@ -10,6 +10,7 @@ import {
 	Query,
 } from "@nestjs/common";
 import { TokenInfoDto, TransferDto } from "../dto/transfer.dto";
+import { formatGwei } from "viem";
 
 @ApiTags("token")
 @Controller("token")
@@ -26,12 +27,18 @@ export class TokenController {
 	async getTokenInfo(@Query() tokenInfoDto: TokenInfoDto) {
 		try {
 			let data = {};
+
+			data = {
+				...data,
+				...(await this.tokenService.getTokenInfo()),
+			};
 			if (tokenInfoDto.address) {
-				data = await this.tokenService.getTokenBalance(tokenInfoDto.address);
-			} else {
+				const balance = await this.tokenService.getTokenBalance(
+					tokenInfoDto.address
+				);
 				data = {
 					...data,
-					...(await this.tokenService.getTokenInfo()),
+					balance: balance,
 				};
 			}
 			return data;

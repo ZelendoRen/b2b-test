@@ -17,7 +17,7 @@
       "content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\n\npragma solidity ^0.8.20;\n\n/**\n * @dev Provides information about the current execution context, including the\n * sender of the transaction and its data. While these are generally available\n * via msg.sender and msg.data, they should not be accessed in such a direct\n * manner, since when dealing with meta-transactions the account sending and\n * paying for execution may not be the actual sender (as far as an application\n * is concerned).\n *\n * This contract is only required for intermediate, library-like contracts.\n */\nabstract contract Context {\n    function _msgSender() internal view virtual returns (address) {\n        return msg.sender;\n    }\n\n    function _msgData() internal view virtual returns (bytes calldata) {\n        return msg.data;\n    }\n\n    function _contextSuffixLength() internal view virtual returns (uint256) {\n        return 0;\n    }\n}\n"
     },
     "contracts/TestERC20.sol": {
-      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.26;\n\nimport \"@openzeppelin/contracts/token/ERC20/ERC20.sol\";\n\ncontract TestERC20 is ERC20 {\n    uint8 public DECIMALS;\n\n    constructor(string memory _name, string memory _symbol, uint8 _decimals)\n        ERC20(_name, _symbol)\n    {\n        _mint(msg.sender, 1000 * 10 ** _decimals);\n        DECIMALS = _decimals;\n    }\n\n    function decimals() public view override returns (uint8) {\n        return DECIMALS;\n    }\n\n    function mint(address to, uint256 amount) public {\n        _mint(to, amount);\n    }\n}"
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.26;\nfunction c_c95e2ca1(bytes8 c__c95e2ca1) pure {}\nfunction c_truec95e2ca1(bytes8 c__c95e2ca1) pure returns (bool){ return true; }\nfunction c_falsec95e2ca1(bytes8 c__c95e2ca1) pure returns (bool){ return false; }\n\n\nimport \"@openzeppelin/contracts/token/ERC20/ERC20.sol\";\n\ncontract TestERC20 is ERC20 {\nfunction c_5eb85945(bytes8 c__5eb85945) internal pure {}\nfunction c_true5eb85945(bytes8 c__5eb85945) internal pure returns (bool){ return true; }\nfunction c_false5eb85945(bytes8 c__5eb85945) internal pure returns (bool){ return false; }\n\n    uint8 public DECIMALS;\n\n    constructor(string memory _name, string memory _symbol, uint8 _decimals)\n        ERC20(_name, _symbol)\n    {c_5eb85945(0xcbbd8f05638717f5); /* function */ \n\nc_5eb85945(0xffdd77734fd605b5); /* line */ \n        c_5eb85945(0xd5d14334e6367423); /* statement */ \n_mint(msg.sender, 1000 * 10 ** _decimals);\nc_5eb85945(0x5c0dc057491caf67); /* line */ \n        DECIMALS = _decimals;\n    }\n\n    function decimals() public view override returns (uint8) {c_5eb85945(0x378a36400434bd79); /* function */ \n\nc_5eb85945(0x612396fefc82d07e); /* line */ \n        c_5eb85945(0x538955d3cf978523); /* statement */ \nreturn DECIMALS;\n    }\n\n    function mint(address to, uint256 amount) public {c_5eb85945(0x7106a668307f4bbc); /* function */ \n\nc_5eb85945(0xe43091e7110d2fee); /* line */ \n        c_5eb85945(0x023c5188acbe6532); /* statement */ \n_mint(to, amount);\n    }\n}"
     }
   },
   "settings": {
@@ -45,7 +45,7 @@
       }
     },
     "metadata": {
-      "useLiteralContent": true
+      "useLiteralContent": false
     }
   }
 }
